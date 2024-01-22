@@ -33,6 +33,34 @@ const ProductManagement = (props) => {
     }
   }, [totalPages]);
 
+  const renderActionButtons = (slug) => {
+    return (
+      <div>
+        <Link
+          href={'/product-management/' + slug + '?edit=false'}
+          type="button"
+          className="text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-green-300 font-medium rounded-full text-sm px-2 py-2 text-center me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+        >
+          View
+        </Link>
+        <Link
+          type="button"
+          href={'product-management/' + slug + '?edit=true'}
+          className="text-white bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-yellow-300 font-medium rounded-full text-sm px-2 py-2 text-center me-2 mb-2 dark:focus:ring-yellow-900"
+        >
+          Edit
+        </Link>
+        <Link
+          type="button"
+          href={'/'}
+          className="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-red-300 font-medium rounded-full text-sm px-2 py-2 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
+        >
+          Delete
+        </Link>
+      </div>
+    );
+  };
+
   return productList.length ? (
     <>
       <HeaderTitle title={'Product Management'} />
@@ -68,47 +96,29 @@ const ProductManagement = (props) => {
                   </p>
                 </div>
               </div>
-              <div>
-                <Link
-                  href={'/product-management/' + product.slug + '?edit=false'}
-                  type="button"
-                  className="text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
-                >
-                  View
-                </Link>
-                <Link
-                  type="button"
-                  href={'product-management/' + product.slug + '?edit=true'}
-                  className="text-white bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-yellow-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:focus:ring-yellow-900"
-                >
-                  Edit
-                </Link>
-                <Link
-                  type="button"
-                  href={'/'}
-                  className="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
-                >
-                  Delete
-                </Link>
-              </div>
+              {renderActionButtons(product.slug)}
             </li>
           ))}
       </ul>
 
       <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
         <div className="flex flex-1 justify-between sm:hidden">
-          <a
-            href="#"
-            className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-          >
-            Previous
-          </a>
-          <a
-            href="#"
-            className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-          >
-            Next
-          </a>
+          {currentPage > 1 && (
+            <a
+              href="#"
+              className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            >
+              Previous
+            </a>
+          )}
+          {currentPage < totalPages && (
+            <a
+              href="#"
+              className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            >
+              Next
+            </a>
+          )}
         </div>
         <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
           <div>
