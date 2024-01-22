@@ -41,21 +41,21 @@ const ProductManagement = (props) => {
           type="button"
           className="text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-green-300 font-medium rounded-full text-sm px-2 py-2 text-center me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
         >
-          View
+          Xem
         </Link>
         <Link
           type="button"
           href={'product-management/' + slug + '?edit=true'}
           className="text-white bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-yellow-300 font-medium rounded-full text-sm px-2 py-2 text-center me-2 mb-2 dark:focus:ring-yellow-900"
         >
-          Edit
+          Sửa
         </Link>
         <Link
           type="button"
           href={'/'}
           className="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-red-300 font-medium rounded-full text-sm px-2 py-2 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
         >
-          Delete
+          Xoá
         </Link>
       </div>
     );
@@ -123,8 +123,8 @@ const ProductManagement = (props) => {
         <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
           <div>
             <p className="text-sm text-gray-700">
-              Showing <span className="font-medium"></span>
-              <span className="font-medium">{productList.length}</span> results
+              Tổng cộng <span className="font-medium"></span>
+              <span className="font-medium">{productList.length}</span> kết quả
             </p>
           </div>
           <div>

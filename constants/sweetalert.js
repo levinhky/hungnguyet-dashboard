@@ -1,8 +1,8 @@
-const { default: Swal } = require("sweetalert2");
+const { default: Swal } = require('sweetalert2');
 
 const Toast = Swal.mixin({
   toast: true,
-  position: "top-end",
+  position: 'top-end',
   showConfirmButton: false,
   timer: 2000,
   timerProgressBar: true,
@@ -14,15 +14,22 @@ const Toast = Swal.mixin({
 
 export function ToastInfo(title, html) {
   Toast.fire({
-    icon: "info",
+    icon: 'info',
     title,
-    html: html ? html : "",
+    html: html ? html : '',
   });
 }
 
 export function ToastSuccess(title) {
-    Toast.fire({
-      icon: "success",
-      title
-    });
-  }
+  Toast.fire({
+    icon: 'success',
+    title,
+  });
+}
+
+export function ToastError(title) {
+  Toast.fire({
+    icon: "error",
+    title
+  });
+}

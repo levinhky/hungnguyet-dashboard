@@ -23,8 +23,8 @@ function classNames(...classes) {
 }
 const Header = () => {
   const [navigation, setNavigation] = useState([
-    { name: "Dashboard", href: "/", current: true },
-    { name: "Product Management", href: "/product-management", current: false },
+    { name: "Trang chủ", href: "/", current: true },
+    { name: "Quản lý sản phẩm", href: "/product-management", current: false },
     { name: "Category Management", href: "#", current: false },
     { name: "Calendar", href: "#", current: false },
     { name: "Reports", href: "#", current: false },

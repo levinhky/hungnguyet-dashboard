@@ -1,13 +1,14 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useId, useState } from 'react';
 import { PhotoIcon } from '@heroicons/react/24/solid';
 
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { storage } from '@/lib/firebase';
 import { useRouter } from 'next/navigation';
-import { ToastSuccess } from '@/constants/sweetalert';
+import { ToastError, ToastSuccess } from '@/constants/sweetalert';
 import ApiConfig from '@/Config/ApiConfig';
+import Select from 'react-select';
 
 const initialProductState = {
   id: '',
@@ -24,10 +25,18 @@ const initialProductState = {
     uses: '',
     display: false,
   },
+  category: '',
+};
+
+const initialCategoryState = {
+  id: '',
+  name: '',
+  display: false,
 };
 
 function ProductForm(props) {
   const [product, setProduct] = useState(initialProductState);
+  const [categoryList, setCategoryList] = useState([initialCategoryState]);
   const [progress, setProgress] = useState(0);
   const [loading, setLoading] = useState(0);
 
@@ -39,7 +48,7 @@ function ProductForm(props) {
   useEffect(() => {
     const getProduct = async () => {
       const productRequest = await fetch(
-        process.env.NEXT_PUBLIC_BACKEND_BASE_URL + 'products/' + slug + '?isFromBE=true',
+        ApiConfig.baseURL + 'products/' + slug + '?isFromBE=true',
       );
       const product = await productRequest.json();
       product._id &&
@@ -60,10 +69,27 @@ function ProductForm(props) {
             uses: product.attributes?.uses || '',
             display: product.attributes?.display || false,
           },
+          category: product?.category
         }));
     };
 
     slug !== 'add' && getProduct();
+  }, [slug]);
+
+  useEffect(() => {
+    const getListCategory = async () => {
+      const categoriesRequest = await fetch(ApiConfig.baseURL + 'categories/all');
+      const categories = await categoriesRequest.json();
+      const categoryList = categories.map((category) => ({
+        id: category._id,
+        name: category.name,
+        display: category.display,
+      }));
+
+      categories.length > 0 && setCategoryList(categoryList);
+    };
+
+    getListCategory();
   }, [slug]);
 
   const handlePostProduct = async () => {
@@ -75,12 +101,14 @@ function ProductForm(props) {
       },
       body: JSON.stringify(product),
     });
-    console.log(postRequest);
+
     if (postRequest.status === 200) {
       router.push('/product-management');
       slug === 'add'
         ? ToastSuccess('Sản phẩm đã được thêm')
         : ToastSuccess('Sản phẩm đã được cập nhật');
+    } else if (postRequest.status === 500) {
+      ToastError('Có lỗi xảy ra');
     }
   };
 
@@ -103,6 +131,13 @@ function ProductForm(props) {
       },
     }));
   };
+
+  const handleCategoryChange = (category) => {
+    setProduct((prevProduct) => ({
+      ...prevProduct,
+      category: category.value,
+    }));
+  }
 
   const handleChangeImage = (e) => {
     for (let i = 0; i < e.target.files.length; i++) {
@@ -191,6 +226,26 @@ function ProductForm(props) {
     );
   };
 
+  const renderCategorySelect = () => {
+    const options = categoryList.map((category) => ({
+      value: category.id,
+      label: category.name,
+    }));
+    const defaultValue = options.find(category => category.value === product.category._id);
+    
+    return (
+      <div className="sm:col-span-4">
+        <Select 
+        isSearchable={false} 
+        placeholder="Chọn danh mục" 
+        onChange={handleCategoryChange}
+        instanceId={useId()}
+        defaultValue={defaultValue}
+        options={options} />
+      </div>
+    );
+  };
+
   const renderUploadFile = () => {
     return (
       <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
@@ -249,9 +304,8 @@ function ProductForm(props) {
       </div>
     );
   };
-
-  console.log(product);
-
+  // console.log(product);
+  // console.log(categoryList);
   return (
     <form>
       <div className="space-y-12">
@@ -374,6 +428,8 @@ function ProductForm(props) {
                 />
               </div>
             </div>
+
+            {renderCategorySelect()}
 
             <div className="col-span-full">
               <label
