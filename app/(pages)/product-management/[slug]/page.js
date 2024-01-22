@@ -1,26 +1,27 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState } from "react";
-import { PhotoIcon } from "@heroicons/react/24/solid";
+import React, { useEffect, useState } from 'react';
+import { PhotoIcon } from '@heroicons/react/24/solid';
 
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { storage } from "@/lib/firebase";
-import { useRouter } from "next/navigation";
-import { ToastSuccess } from "@/constants/sweetalert";
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { storage } from '@/lib/firebase';
+import { useRouter } from 'next/navigation';
+import { ToastSuccess } from '@/constants/sweetalert';
+import ApiConfig from '@/Config/ApiConfig';
 
 const initialProductState = {
-  id: "",
-  name: "",
-  sku: "",
+  id: '',
+  name: '',
+  sku: '',
   status: false,
-  views: "",
+  views: '',
   thumbs: [],
   attributes: {
-    capacity: "",
-    color: "",
-    characteristics: "",
-    design: "",
-    uses: "",
+    capacity: '',
+    color: '',
+    characteristics: '',
+    design: '',
+    uses: '',
     display: false,
   },
 };
@@ -38,10 +39,7 @@ function ProductForm(props) {
   useEffect(() => {
     const getProduct = async () => {
       const productRequest = await fetch(
-        process.env.NEXT_PUBLIC_BACKEND_BASE_URL +
-          "products/" +
-          slug +
-          "?isFromBE=true"
+        process.env.NEXT_PUBLIC_BACKEND_BASE_URL + 'products/' + slug + '?isFromBE=true',
       );
       const product = await productRequest.json();
       product._id &&
@@ -55,37 +53,34 @@ function ProductForm(props) {
           thumbs: product?.thumbs,
           attributes: {
             ...prevState.attributes,
-            capacity: product.attributes?.capacity || "",
-            color: product.attributes?.color || "",
-            characteristics: product.attributes?.characteristics || "",
-            design: product.attributes?.design || "",
-            uses: product.attributes?.uses || "",
+            capacity: product.attributes?.capacity || '',
+            color: product.attributes?.color || '',
+            characteristics: product.attributes?.characteristics || '',
+            design: product.attributes?.design || '',
+            uses: product.attributes?.uses || '',
             display: product.attributes?.display || false,
           },
         }));
     };
 
-    slug !== "add" && getProduct();
+    slug !== 'add' && getProduct();
   }, [slug]);
 
   const handlePostProduct = async () => {
-    const url = slug === "add" ? "products/add" : `products/${product.id}`;
-    const postRequest = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${url}`,
-      {
-        method: slug === "add" ? "POST" : "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(product),
-      }
-    );
+    const url = slug === 'add' ? 'products/add' : `products/${product.id}`;
+    const postRequest = await fetch(`${ApiConfig.baseURL}${url}`, {
+      method: slug === 'add' ? 'POST' : 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(product),
+    });
     console.log(postRequest);
     if (postRequest.status === 200) {
-      router.push("/product-management");
-      slug === "add"
-        ? ToastSuccess("Sản phẩm đã được thêm")
-        : ToastSuccess("Sản phẩm đã được cập nhật");
+      router.push('/product-management');
+      slug === 'add'
+        ? ToastSuccess('Sản phẩm đã được thêm')
+        : ToastSuccess('Sản phẩm đã được cập nhật');
     }
   };
 
@@ -93,7 +88,7 @@ function ProductForm(props) {
     const { name, value } = event.target;
     setProduct((prevProduct) => ({
       ...prevProduct,
-      [name]: name == "status" ? !prevProduct.status : value,
+      [name]: name == 'status' ? !prevProduct.status : value,
     }));
   };
 
@@ -104,7 +99,7 @@ function ProductForm(props) {
       ...prevProduct,
       attributes: {
         ...prevProduct.attributes,
-        [name]: name == "display" ? !prevProduct.attributes[name] : value,
+        [name]: name == 'display' ? !prevProduct.attributes[name] : value,
       },
     }));
   };
@@ -115,46 +110,43 @@ function ProductForm(props) {
       // Create the file metadata
       /** @type {any} */
       const metadata = {
-        contentType: "image/jpeg",
+        contentType: 'image/jpeg',
       };
 
-      const storageRef = ref(storage, "images/" + file.name);
+      const storageRef = ref(storage, 'images/' + file.name);
       const uploadTask = uploadBytesResumable(storageRef, file, metadata);
 
       uploadTask.on(
-        "state_changed",
+        'state_changed',
         (snapshot) => {
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log("Upload is " + progress + "% done");
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log('Upload is ' + progress + '% done');
           setProgress(Math.round(progress));
           setLoading(true);
           switch (snapshot.state) {
-            case "paused":
-              console.log("Upload is paused");
+            case 'paused':
+              console.log('Upload is paused');
               break;
-            case "running":
-              console.log("Upload is running");
+            case 'running':
+              console.log('Upload is running');
               break;
             default:
-              console.log("Error");
+              console.log('Error');
           }
         },
         (error) => {
           switch (error.code) {
-            case "storage/unauthorized":
+            case 'storage/unauthorized':
               toastWarning("User doesn't have permission to access the object");
               break;
-            case "storage/canceled":
-              toastWarning("User canceled the upload");
+            case 'storage/canceled':
+              toastWarning('User canceled the upload');
               break;
-            case "storage/unknown":
-              toastWarning(
-                "Unknown error occurred, inspect error.serverResponse"
-              );
+            case 'storage/unknown':
+              toastWarning('Unknown error occurred, inspect error.serverResponse');
               break;
             default:
-              console.log("Error");
+              console.log('Error');
           }
         },
         () => {
@@ -165,7 +157,7 @@ function ProductForm(props) {
               thumbs: [...prevProduct.thumbs, downloadURL],
             }));
           });
-        }
+        },
       );
     }
   };
@@ -192,7 +184,7 @@ function ProductForm(props) {
           onClick={handlePostProduct}
           className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
         >
-          {slug === "add" ? "Thêm" : "Sửa"}
+          {slug === 'add' ? 'Thêm' : 'Sửa'}
         </button>
       </div>
     );
@@ -202,10 +194,7 @@ function ProductForm(props) {
     return (
       <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
         <div className="text-center">
-          <PhotoIcon
-            className="mx-auto h-12 w-12 text-gray-300"
-            aria-hidden="true"
-          />
+          <PhotoIcon className="mx-auto h-12 w-12 text-gray-300" aria-hidden="true" />
           <div className="mt-4 flex text-sm leading-6 text-gray-600">
             <label
               htmlFor="file-upload"
@@ -219,14 +208,12 @@ function ProductForm(props) {
                 className="sr-only"
                 multiple
                 onChange={(e) => handleChangeImage(e)}
-                disabled={edit === "false" ? true : false}
+                disabled={edit === 'false' ? true : false}
               />
             </label>
             <p className="pl-1">or drag and drop</p>
           </div>
-          <p className="text-xs leading-5 text-gray-600">
-            PNG, JPG, GIF up to 10MB
-          </p>
+          <p className="text-xs leading-5 text-gray-600">PNG, JPG, GIF up to 10MB</p>
         </div>
       </div>
     );
@@ -269,8 +256,7 @@ function ProductForm(props) {
       <div className="space-y-12">
         <div className="border-b border-gray-900/10 pb-12">
           <h2 className="text-base font-semibold leading-7 text-gray-900">
-            {edit === "false" ? "Xem" : slug === "add" ? "Thêm" : "Chỉnh sửa"}{" "}
-            Sản phẩm
+            {edit === 'false' ? 'Xem' : slug === 'add' ? 'Thêm' : 'Chỉnh sửa'} Sản phẩm
           </h2>
 
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
@@ -288,9 +274,9 @@ function ProductForm(props) {
                   id="name"
                   value={product?.name}
                   onChange={(e) => handleInputChange(e)}
-                  disabled={edit === "false" ? true : false}
+                  disabled={edit === 'false' ? true : false}
                   className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset 
-                  ${edit === "false" ? "cursor-not-allowed" : ""}
+                  ${edit === 'false' ? 'cursor-not-allowed' : ''}
                   ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
                 />
               </div>
@@ -310,16 +296,14 @@ function ProductForm(props) {
                   id="sku"
                   value={product?.sku}
                   onChange={(e) => handleInputChange(e)}
-                  disabled={
-                    edit === "false" ? true : slug === "add" ? true : false
-                  }
+                  disabled={edit === 'false' ? true : slug === 'add' ? true : false}
                   className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset 
                   ${
-                    edit === "false"
-                      ? "cursor-not-allowed"
-                      : slug === "add"
-                      ? "cursor-not-allowed"
-                      : ""
+                    edit === 'false'
+                      ? 'cursor-not-allowed'
+                      : slug === 'add'
+                      ? 'cursor-not-allowed'
+                      : ''
                   }
                   ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
                 />
@@ -334,12 +318,12 @@ function ProductForm(props) {
                   className="sr-only peer"
                   name="status"
                   onChange={(e) => handleInputChange(e)}
-                  disabled={edit === "false" ? true : false}
+                  disabled={edit === 'false' ? true : false}
                   checked={product.status}
                 />
                 <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none  dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600" />
                 <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                  {product.status ? "Còn hàng" : "Hết hàng"}
+                  {product.status ? 'Còn hàng' : 'Hết hàng'}
                 </span>
               </label>
             </div>
@@ -352,12 +336,12 @@ function ProductForm(props) {
                   className="sr-only peer"
                   name="display"
                   onChange={(e) => handleAttributeChange(e)}
-                  disabled={edit === "false" ? true : false}
+                  disabled={edit === 'false' ? true : false}
                   checked={product.attributes.display}
                 />
                 <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none  dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600" />
                 <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                  Trạng thái: {product.attributes.display ? "Hiện" : "Ẩn"}
+                  Trạng thái: {product.attributes.display ? 'Hiện' : 'Ẩn'}
                 </span>
               </label>
             </div>
@@ -379,11 +363,11 @@ function ProductForm(props) {
                   onChange={(e) => handleInputChange(e)}
                   className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset 
                   ${
-                    edit === "false"
-                      ? "cursor-not-allowed"
-                      : slug === "add"
-                      ? "cursor-not-allowed"
-                      : ""
+                    edit === 'false'
+                      ? 'cursor-not-allowed'
+                      : slug === 'add'
+                      ? 'cursor-not-allowed'
+                      : ''
                   }
                   ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
                 />
@@ -397,13 +381,13 @@ function ProductForm(props) {
               >
                 Hình ảnh:
               </label>
-              {edit == "true" || (slug === "add" && renderUploadFile())}
+              {edit == 'true' || (slug === 'add' && renderUploadFile())}
 
               {!loading ? (
                 <div className="grid grid-cols-3 md:grid-cols-4 gap-4 mt-5">
                   {product.thumbs.length
                     ? product.thumbs.map((thumb) => renderProductThumb(thumb))
-                    : ""}
+                    : ''}
                 </div>
               ) : (
                 <div className="w-full bg-gray-200 rounded-full dark:bg-gray-700">
@@ -439,9 +423,9 @@ function ProductForm(props) {
                   id="capacity"
                   value={product?.attributes.capacity}
                   onChange={(e) => handleAttributeChange(e)}
-                  disabled={edit === "false" ? true : false}
+                  disabled={edit === 'false' ? true : false}
                   className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset 
-                  ${edit === "false" ? "cursor-not-allowed" : ""}
+                  ${edit === 'false' ? 'cursor-not-allowed' : ''}
                   ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
                 />
               </div>
@@ -461,9 +445,9 @@ function ProductForm(props) {
                   id="color"
                   value={product?.attributes.color}
                   onChange={(e) => handleAttributeChange(e)}
-                  disabled={edit === "false" ? true : false}
+                  disabled={edit === 'false' ? true : false}
                   className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset 
-                  ${edit === "false" ? "cursor-not-allowed" : ""}
+                  ${edit === 'false' ? 'cursor-not-allowed' : ''}
                   ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
                 />
               </div>
@@ -483,9 +467,9 @@ function ProductForm(props) {
                   id="characteristics"
                   value={product?.attributes.characteristics}
                   onChange={(e) => handleAttributeChange(e)}
-                  disabled={edit === "false" ? true : false}
+                  disabled={edit === 'false' ? true : false}
                   className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset 
-                  ${edit === "false" ? "cursor-not-allowed" : ""}
+                  ${edit === 'false' ? 'cursor-not-allowed' : ''}
                   ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
                 />
               </div>
@@ -505,9 +489,9 @@ function ProductForm(props) {
                   id="design"
                   value={product?.attributes.design}
                   onChange={(e) => handleAttributeChange(e)}
-                  disabled={edit === "false" ? true : false}
+                  disabled={edit === 'false' ? true : false}
                   className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset 
-                  ${edit === "false" ? "cursor-not-allowed" : ""}
+                  ${edit === 'false' ? 'cursor-not-allowed' : ''}
                   ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
                 />
               </div>
@@ -527,9 +511,9 @@ function ProductForm(props) {
                   id="uses"
                   value={product?.attributes.uses}
                   onChange={(e) => handleAttributeChange(e)}
-                  disabled={edit === "false" ? true : false}
+                  disabled={edit === 'false' ? true : false}
                   className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset 
-                  ${edit === "false" ? "cursor-not-allowed" : ""}
+                  ${edit === 'false' ? 'cursor-not-allowed' : ''}
                   ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
                 />
               </div>

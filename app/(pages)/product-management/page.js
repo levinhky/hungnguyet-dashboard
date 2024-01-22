@@ -1,9 +1,10 @@
-"use client";
+'use client';
 
-import HeaderTitle from "@/components/HeaderTitle";
-import React, { useEffect, useState } from "react";
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
-import Link from "next/link";
+import HeaderTitle from '@/components/HeaderTitle';
+import React, { useEffect, useState } from 'react';
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
+import Link from 'next/link';
+import ApiConfig from '@/Config/ApiConfig';
 
 const ProductManagement = (props) => {
   const [productList, setProductList] = useState([]);
@@ -14,10 +15,7 @@ const ProductManagement = (props) => {
   useEffect(() => {
     const getProductList = async () => {
       const productResponse = await fetch(
-        process.env.NEXT_PUBLIC_BACKEND_BASE_URL +
-          "products/all?page=" +
-          currentPage +
-          "&limit=3"
+        ApiConfig.baseURL + 'products/all?page=' + currentPage + '&limit=3',
       );
       const data = await productResponse.json();
 
@@ -36,10 +34,10 @@ const ProductManagement = (props) => {
 
   return (
     <>
-      <HeaderTitle title={"Product Management"} />
+      <HeaderTitle title={'Product Management'} />
 
       <Link
-        href={"/product-management/add"}
+        href={'/product-management/add'}
         type="button"
         className="text-white bg-blue-700 hover:bg-blue-800
          font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 
@@ -71,7 +69,7 @@ const ProductManagement = (props) => {
               </div>
               <div>
                 <Link
-                  href={"/product-management/" + product.slug + "?edit=false"}
+                  href={'/product-management/' + product.slug + '?edit=false'}
                   type="button"
                   className="text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
                 >
@@ -79,14 +77,14 @@ const ProductManagement = (props) => {
                 </Link>
                 <Link
                   type="button"
-                  href={"product-management/" + product.slug + "?edit=true"}
+                  href={'product-management/' + product.slug + '?edit=true'}
                   className="text-white bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-yellow-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:focus:ring-yellow-900"
                 >
                   Edit
                 </Link>
                 <Link
                   type="button"
-                  href={"/"}
+                  href={'/'}
                   className="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
                 >
                   Delete
@@ -128,7 +126,7 @@ const ProductManagement = (props) => {
                   href="#"
                   onClick={() => setCurrentPage(currentPage - 1)}
                   className={`relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 ${
-                    currentPage === 1 ? "pointer-events-none opacity-50" : ""
+                    currentPage === 1 ? 'pointer-events-none opacity-50' : ''
                   }`}
                 >
                   <span className="sr-only">Previous</span>
@@ -141,11 +139,11 @@ const ProductManagement = (props) => {
                   key={page}
                   href="#"
                   onClick={() => setCurrentPage(page)}
-                  aria-current={currentPage === page ? "page" : undefined}
+                  aria-current={currentPage === page ? 'page' : undefined}
                   className={`relative z-10 inline-flex items-center ${
                     currentPage === page
-                      ? "bg-indigo-600 text-white"
-                      : "bg-white text-gray-700 hover:bg-gray-50"
+                      ? 'bg-indigo-600 text-white'
+                      : 'bg-white text-gray-700 hover:bg-gray-50'
                   } px-4 py-2 text-sm font-semibold focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ring-1 ring-inset ring-gray-300`}
                 >
                   {page}
@@ -157,9 +155,7 @@ const ProductManagement = (props) => {
                   href="#"
                   onClick={() => setCurrentPage(currentPage + 1)}
                   className={`relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 ${
-                    currentPage === totalPages
-                      ? "pointer-events-none opacity-50"
-                      : ""
+                    currentPage === totalPages ? 'pointer-events-none opacity-50' : ''
                   }`}
                 >
                   <span className="sr-only">Next</span>
