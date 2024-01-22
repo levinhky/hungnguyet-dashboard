@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
 import Link from 'next/link';
 import ApiConfig from '@/Config/ApiConfig';
+import Loading from '@/app/loading';
 
 const ProductManagement = (props) => {
   const [productList, setProductList] = useState([]);
@@ -32,7 +33,7 @@ const ProductManagement = (props) => {
     }
   }, [totalPages]);
 
-  return (
+  return productList.length ? (
     <>
       <HeaderTitle title={'Product Management'} />
 
@@ -167,6 +168,8 @@ const ProductManagement = (props) => {
         </div>
       </div>
     </>
+  ) : (
+    <Loading />
   );
 };
 
