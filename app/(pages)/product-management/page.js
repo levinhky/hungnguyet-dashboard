@@ -33,25 +33,38 @@ const ProductManagement = (props) => {
     }
   }, [totalPages]);
 
+  const renderAddProductButton = () => {
+    return (
+      <Link
+        href={'/product-management/add'}
+        type="button"
+        className="text-white bg-blue-700 hover:bg-blue-800
+     font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 
+     dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800
+     mt-5
+     "
+      >
+        Thêm sản phẩm
+      </Link>
+    );
+  };
+
   const renderActionButtons = (slug) => {
     return (
       <div>
         <Link
           href={'/product-management/' + slug + '?edit=false'}
-          type="button"
           className="text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-green-300 font-medium rounded-full text-sm px-2 py-2 text-center me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
         >
           Xem
         </Link>
         <Link
-          type="button"
           href={'product-management/' + slug + '?edit=true'}
           className="text-white bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-yellow-300 font-medium rounded-full text-sm px-2 py-2 text-center me-2 mb-2 dark:focus:ring-yellow-900"
         >
           Sửa
         </Link>
         <Link
-          type="button"
           href={'/'}
           className="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-red-300 font-medium rounded-full text-sm px-2 py-2 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
         >
@@ -65,17 +78,7 @@ const ProductManagement = (props) => {
     <>
       <HeaderTitle title={'Product Management'} />
 
-      <Link
-        href={'/product-management/add'}
-        type="button"
-        className="text-white bg-blue-700 hover:bg-blue-800
-         font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 
-         dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800
-         mt-5
-         "
-      >
-        Thêm sản phẩm
-      </Link>
+      {renderAddProductButton()}
 
       <ul role="list" className="divide-y divide-gray-100">
         {productList.length &&
