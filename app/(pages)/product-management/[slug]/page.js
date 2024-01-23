@@ -34,9 +34,15 @@ const initialCategoryState = {
   display: false,
 };
 
+const initialCategorySelectState = {
+  value: '',
+  label: '',
+};
+
 function ProductForm(props) {
   const [product, setProduct] = useState(initialProductState);
   const [categoryList, setCategoryList] = useState([initialCategoryState]);
+  const [categorySelect, setCategorySelect] = useState(initialCategorySelectState);
   const [progress, setProgress] = useState(0);
   const [loading, setLoading] = useState(0);
 
@@ -51,7 +57,7 @@ function ProductForm(props) {
         ApiConfig.baseURL + 'products/' + slug + '?isFromBE=true',
       );
       const product = await productRequest.json();
-      product._id &&
+      if (product._id) {
         setProduct((prevState) => ({
           ...prevState,
           id: product?._id,
@@ -71,6 +77,12 @@ function ProductForm(props) {
           },
           category: product?.category,
         }));
+
+        setCategorySelect({
+          value: product?.category._id,
+          label: product?.category.name,
+        });
+      }
     };
 
     slug !== 'add' && getProduct();
@@ -241,7 +253,7 @@ function ProductForm(props) {
           placeholder="Chọn danh mục"
           onChange={handleCategoryChange}
           instanceId={useId()}
-          defaultValue={defaultValue}
+          defaultValue={categorySelect}
           options={options}
         />
       </div>
