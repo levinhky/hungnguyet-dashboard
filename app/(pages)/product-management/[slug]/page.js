@@ -69,7 +69,7 @@ function ProductForm(props) {
             uses: product.attributes?.uses || '',
             display: product.attributes?.display || false,
           },
-          category: product?.category
+          category: product?.category,
         }));
     };
 
@@ -137,7 +137,7 @@ function ProductForm(props) {
       ...prevProduct,
       category: category.value,
     }));
-  }
+  };
 
   const handleChangeImage = (e) => {
     for (let i = 0; i < e.target.files.length; i++) {
@@ -231,17 +231,19 @@ function ProductForm(props) {
       value: category.id,
       label: category.name,
     }));
-    const defaultValue = options.find(category => category.value === product.category._id);
-    
+    const defaultValue =
+      options[0].value !== '' &&
+      options.find((category) => category.value === product.category._id);
     return (
       <div className="sm:col-span-4">
-        <Select 
-        isSearchable={false} 
-        placeholder="Chọn danh mục" 
-        onChange={handleCategoryChange}
-        instanceId={useId()}
-        defaultValue={defaultValue}
-        options={options} />
+        <Select
+          isSearchable={false}
+          placeholder="Chọn danh mục"
+          onChange={handleCategoryChange}
+          instanceId={useId()}
+          defaultValue={defaultValue}
+          options={options}
+        />
       </div>
     );
   };
