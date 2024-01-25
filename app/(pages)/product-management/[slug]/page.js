@@ -149,6 +149,11 @@ function ProductForm(props) {
       ...prevProduct,
       category: category.value,
     }));
+
+    setCategorySelect({
+      value: category.value,
+      label: category.label,
+    });
   };
 
   const handleChangeImage = (e) => {
@@ -243,9 +248,7 @@ function ProductForm(props) {
       value: category.id,
       label: category.name,
     }));
-    const defaultValue =
-      options[0].value !== '' &&
-      options.find((category) => category.value === product.category._id);
+
     return (
       <div className="sm:col-span-4">
         <Select
@@ -253,7 +256,7 @@ function ProductForm(props) {
           placeholder="Chọn danh mục"
           onChange={handleCategoryChange}
           instanceId={useId()}
-          defaultValue={categorySelect}
+          value={categorySelect.value ? categorySelect : null}
           options={options}
         />
       </div>

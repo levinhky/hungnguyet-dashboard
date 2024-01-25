@@ -25,9 +25,9 @@ const Header = () => {
   const [navigation, setNavigation] = useState([
     { name: "Trang chủ", href: "/", current: true },
     { name: "Quản lý sản phẩm", href: "/product-management", current: false },
-    { name: "Category Management", href: "#", current: false },
-    { name: "Calendar", href: "#", current: false },
-    { name: "Reports", href: "#", current: false },
+    { name: "Quản lý danh mục", href: "/category-management", current: false },
+    { name: "Quản lý Slider", href: "#", current: false },
+    { name: "Quản lý khách hàng", href: "#", current: false },
   ]);
 
   const handleItemClick = (clickedItem) => {

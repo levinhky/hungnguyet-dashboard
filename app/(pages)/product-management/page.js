@@ -6,11 +6,13 @@ import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
 import Link from 'next/link';
 import ApiConfig from '@/Config/ApiConfig';
 import Loading from '@/app/loading';
+import { ToastSuccess } from '@/constants/sweetalert';
 
 const ProductManagement = (props) => {
   const [productList, setProductList] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
   const [pagination, setPagination] = useState([]);
 
   useEffect(() => {
@@ -19,9 +21,10 @@ const ProductManagement = (props) => {
         ApiConfig.baseURL + 'products/all?page=' + currentPage + '&limit=3',
       );
       const data = await productResponse.json();
-
+      console.log(data);
       data.products && setProductList(data.products);
       data.totalPages && setTotalPages(data.totalPages);
+      data.totalProducts && setTotalCount(data.totalProducts);
     };
 
     getProductList();
@@ -32,6 +35,18 @@ const ProductManagement = (props) => {
       setPagination(Array.from({ length: totalPages }, (v, i) => i + 1));
     }
   }, [totalPages]);
+
+  const handleDeleteProduct = async (id) => {
+    const request = await fetch(ApiConfig.baseURL + 'products/' + id, {
+      method: 'DELETE',
+    });
+    const response = await request.json();
+    console.log(response);
+    if (request.status === 200) {
+      ToastSuccess('Sản phẩm đã được xoá');
+      setProductList(response.products);
+    }
+  };
 
   const renderAddProductButton = () => {
     return (
@@ -49,7 +64,7 @@ const ProductManagement = (props) => {
     );
   };
 
-  const renderActionButtons = (slug) => {
+  const renderActionButtons = (slug, id) => {
     return (
       <div>
         <Link
@@ -64,12 +79,12 @@ const ProductManagement = (props) => {
         >
           Sửa
         </Link>
-        <Link
-          href={'/'}
+        <button
+          onClick={() => handleDeleteProduct(id)}
           className="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-red-300 font-medium rounded-full text-sm px-2 py-2 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
         >
           Xoá
-        </Link>
+        </button>
       </div>
     );
   };
@@ -99,7 +114,7 @@ const ProductManagement = (props) => {
                   </p>
                 </div>
               </div>
-              {renderActionButtons(product.slug)}
+              {renderActionButtons(product.slug, product._id)}
             </li>
           ))}
       </ul>
@@ -127,7 +142,7 @@ const ProductManagement = (props) => {
           <div>
             <p className="text-sm text-gray-700">
               Tổng cộng <span className="font-medium"></span>
-              <span className="font-medium">{productList.length}</span> kết quả
+              <span className="font-medium">{totalCount}</span> kết quả
             </p>
           </div>
           <div>
