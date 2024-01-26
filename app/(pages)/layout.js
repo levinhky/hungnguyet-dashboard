@@ -1,11 +1,9 @@
 import React from 'react';
 
-function layout({children}) {
-    return (
-        <>
-            {children}
-        </>
-    );
+function layout(props) {
+  const { children } = props;
+  
+  return <>{children}</>;
 }
 
 export default layout;

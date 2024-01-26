@@ -9,7 +9,7 @@ import Loading from '@/app/loading';
 import { ToastSuccess } from '@/constants/sweetalert';
 import { initialCategoryState } from '@/constants/initialState';
 
-const ProductManagement = (props) => {
+const CategoryManagement = (props) => {
   const [categoryList, setCategoryList] = useState([initialCategoryState]);
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
@@ -19,17 +19,17 @@ const ProductManagement = (props) => {
   useEffect(() => {
     const getProductList = async () => {
       const productResponse = await fetch(
-        ApiConfig.baseURL + 'categories/all?page=' + currentPage + '&limit=3',
+        ApiConfig.baseURL + 'categories/all?page=' + currentPage + '&limit=5',
       );
       const data = await productResponse.json();
-      console.log(data);
-      data.products && setCategoryList(data.products);
+
+      data.categories && setCategoryList(data.categories);
       data.totalPages && setTotalPages(data.totalPages);
-      data.totalProducts && setTotalCount(data.totalProducts);
+      data.totalCount && setTotalCount(data.totalCount);
     };
 
     getProductList();
-  }, []);
+  }, [currentPage]);
 
   useEffect(() => {
     if (totalPages > 0) {
@@ -37,8 +37,8 @@ const ProductManagement = (props) => {
     }
   }, [totalPages]);
 
-  const handleDeleteProduct = async (id) => {
-    const request = await fetch(ApiConfig.baseURL + 'products/' + id, {
+  const handleDeleteCategory = async (id) => {
+    const request = await fetch(ApiConfig.baseURL + 'categories/' + id, {
       method: 'DELETE',
     });
     const response = await request.json();
@@ -49,10 +49,10 @@ const ProductManagement = (props) => {
     }
   };
 
-  const renderAddProductButton = () => {
+  const renderAddCategoryButton = () => {
     return (
       <Link
-        href={'/product-management/add'}
+        href={'/category-management/add'}
         type="button"
         className="text-white bg-blue-700 hover:bg-blue-800
      font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 
@@ -69,19 +69,19 @@ const ProductManagement = (props) => {
     return (
       <div>
         <Link
-          href={'/product-management/' + slug + '?edit=false'}
+          href={'/category-management/' + slug + '?edit=false'}
           className="text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-green-300 font-medium rounded-full text-sm px-2 py-2 text-center me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
         >
           Xem
         </Link>
         <Link
-          href={'product-management/' + slug + '?edit=true'}
+          href={'category-management/' + slug + '?edit=true'}
           className="text-white bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-yellow-300 font-medium rounded-full text-sm px-2 py-2 text-center me-2 mb-2 dark:focus:ring-yellow-900"
         >
           Sửa
         </Link>
         <button
-          onClick={() => handleDeleteProduct(id)}
+          onClick={() => handleDeleteCategory(id)}
           className="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-red-300 font-medium rounded-full text-sm px-2 py-2 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
         >
           Xoá
@@ -90,32 +90,29 @@ const ProductManagement = (props) => {
     );
   };
 
-  return productList.length ? (
+  return categoryList.length ? (
     <>
       <HeaderTitle title={'Quản lý danh mục'} />
 
-      {renderAddProductButton()}
+      {renderAddCategoryButton()}
 
       <ul role="list" className="divide-y divide-gray-100">
-        {productList.length &&
-          productList.map((product) => (
-            <li key={product._id} className="flex justify-between gap-x-6 py-5">
+        {categoryList.length &&
+          categoryList.map((category) => (
+            <li key={category._id} className="flex justify-between gap-x-6 py-5">
               <div className="flex min-w-0 gap-x-4">
                 <img
                   className="h-12 w-12 flex-none rounded-full bg-gray-50"
-                  src={product.thumbs[0]}
-                  alt={product.name}
+                  src={category.thumb}
+                  alt={category.name}
                 />
                 <div className="min-w-0 flex-auto">
                   <p className="text-sm font-semibold leading-6 text-gray-900">
-                    {product.name}
-                  </p>
-                  <p className="mt-1 truncate text-xs leading-5 text-gray-500">
-                    SKU: {product.sku}
+                    {category.name} ({category.productsInCategory.length})
                   </p>
                 </div>
               </div>
-              {renderActionButtons(product.slug, product._id)}
+              {renderActionButtons(category.slug, category._id)}
             </li>
           ))}
       </ul>
@@ -202,4 +199,4 @@ const ProductManagement = (props) => {
   );
 };
 
-export default ProductManagement;
+export default CategoryManagement;

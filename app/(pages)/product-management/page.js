@@ -24,11 +24,11 @@ const ProductManagement = (props) => {
       console.log(data);
       data.products && setProductList(data.products);
       data.totalPages && setTotalPages(data.totalPages);
-      data.totalProducts && setTotalCount(data.totalProducts);
+      data.totalCount && setTotalCount(data.totalCount);
     };
 
     getProductList();
-  }, []);
+  }, [currentPage]);
 
   useEffect(() => {
     if (totalPages > 0) {
