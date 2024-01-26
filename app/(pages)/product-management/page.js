@@ -21,7 +21,7 @@ const ProductManagement = (props) => {
         ApiConfig.baseURL + 'products/all?page=' + currentPage + '&limit=3',
       );
       const data = await productResponse.json();
-      console.log(data);
+
       data.products && setProductList(data.products);
       data.totalPages && setTotalPages(data.totalPages);
       data.totalCount && setTotalCount(data.totalCount);

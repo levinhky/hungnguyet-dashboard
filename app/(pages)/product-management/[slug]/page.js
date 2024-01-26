@@ -9,24 +9,7 @@ import { useRouter } from 'next/navigation';
 import { ToastError, ToastSuccess } from '@/constants/sweetalert';
 import ApiConfig from '@/Config/ApiConfig';
 import Select from 'react-select';
-
-const initialProductState = {
-  id: '',
-  name: '',
-  sku: '',
-  status: false,
-  views: '',
-  thumbs: [],
-  attributes: {
-    capacity: '',
-    color: '',
-    characteristics: '',
-    design: '',
-    uses: '',
-    display: false,
-  },
-  category: '',
-};
+import { initialProductState } from '@/constants/initialState';
 
 const initialCategoryState = {
   id: '',

@@ -24,4 +24,25 @@ const initialCategoryState = {
   updatedAt: '',
 };
 
-export { initialCategoryState };
+const initialProductState = {
+  id: '',
+  name: '',
+  sku: '',
+  status: false,
+  views: '',
+  slug: '',
+  thumbs: [],
+  attributes: {
+    capacity: '',
+    color: '',
+    characteristics: '',
+    design: '',
+    uses: '',
+    display: false,
+  },
+  category: '',
+  createdAt: '',
+  updatedAt: '',
+};
+
+export { initialCategoryState, initialProductState };
