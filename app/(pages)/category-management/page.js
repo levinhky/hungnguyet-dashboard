@@ -7,9 +7,10 @@ import Link from 'next/link';
 import ApiConfig from '@/Config/ApiConfig';
 import Loading from '@/app/loading';
 import { ToastSuccess } from '@/constants/sweetalert';
+import { initialCategoryState } from '@/constants/initialState';
 
 const ProductManagement = (props) => {
-  const [productList, setProductList] = useState([]);
+  const [categoryList, setCategoryList] = useState([initialCategoryState]);
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
@@ -18,11 +19,11 @@ const ProductManagement = (props) => {
   useEffect(() => {
     const getProductList = async () => {
       const productResponse = await fetch(
-        ApiConfig.baseURL + 'products/all?page=' + currentPage + '&limit=3',
+        ApiConfig.baseURL + 'categories/all?page=' + currentPage + '&limit=3',
       );
       const data = await productResponse.json();
       console.log(data);
-      data.products && setProductList(data.products);
+      data.products && setCategoryList(data.products);
       data.totalPages && setTotalPages(data.totalPages);
       data.totalProducts && setTotalCount(data.totalProducts);
     };
@@ -44,7 +45,7 @@ const ProductManagement = (props) => {
     console.log(response);
     if (request.status === 200) {
       ToastSuccess('Sản phẩm đã được xoá');
-      setProductList(response.products);
+      setCategoryList(response.products);
     }
   };
 
@@ -91,7 +92,7 @@ const ProductManagement = (props) => {
 
   return productList.length ? (
     <>
-      <HeaderTitle title={'Quản lý sản phẩm'} />
+      <HeaderTitle title={'Quản lý danh mục'} />
 
       {renderAddProductButton()}
 
