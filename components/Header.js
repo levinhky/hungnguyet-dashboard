@@ -27,7 +27,7 @@ const Header = () => {
     { name: 'Trang chủ', href: '/', current: true },
     { name: 'Quản lý sản phẩm', href: '/product-management', current: false },
     { name: 'Quản lý danh mục', href: '/category-management', current: false },
-    { name: 'Quản lý Slider', href: '#', current: false },
+    { name: 'Quản lý Slider', href: '/slider-management', current: false },
     { name: 'Quản lý khách hàng', href: '#', current: false },
   ]);
   const pathname = usePathname();
