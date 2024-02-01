@@ -45,4 +45,15 @@ const initialProductState = {
   updatedAt: '',
 };
 
-export { initialCategoryState, initialProductState };
+const initialSlideState = {
+  id: '',
+  title: '',
+  thumb: '',
+  description: '',
+  buttonText: '',
+  display: false,
+  createdAt: '',
+  updatedAt: '',
+};
+
+export { initialCategoryState, initialProductState, initialSlideState };

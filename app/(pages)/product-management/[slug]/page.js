@@ -212,7 +212,7 @@ function ProductForm(props) {
           className="text-sm font-semibold leading-6 text-gray-900"
           onClick={() => router.back()}
         >
-          Cancel
+          Hủy
         </button>
         <button
           type="button"

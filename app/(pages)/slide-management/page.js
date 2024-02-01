@@ -7,28 +7,28 @@ import Link from 'next/link';
 import ApiConfig from '@/Config/ApiConfig';
 import Loading from '@/app/loading';
 import { ToastSuccess } from '@/constants/sweetalert';
-import { initialCategoryState } from '@/constants/initialState';
+import { initialSlideState } from '@/constants/initialState';
 
-const CategoryManagement = (props) => {
-  const [categoryList, setCategoryList] = useState([initialCategoryState]);
+const SlideManagement = (props) => {
+  const [slideList, setSlideList] = useState([initialSlideState]);
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [pagination, setPagination] = useState([]);
 
   useEffect(() => {
-    const getCategoryList = async () => {
+    const getSlideList = async () => {
       const res = await fetch(
-        ApiConfig.baseURL + 'categories/all?page=' + currentPage + '&limit=5',
+        ApiConfig.baseURL + 'slides/all?page=' + currentPage + '&limit=5',
       );
       const data = await res.json();
 
-      data.categories && setCategoryList(data.categories);
+      data.slides && setSlideList(data.slides);
       data.totalPages && setTotalPages(data.totalPages);
       data.totalCount && setTotalCount(data.totalCount);
     };
 
-    getCategoryList();
+    getSlideList();
   }, [currentPage]);
 
   useEffect(() => {
@@ -37,22 +37,22 @@ const CategoryManagement = (props) => {
     }
   }, [totalPages]);
 
-  const handleDeleteCategory = async (id) => {
-    const request = await fetch(ApiConfig.baseURL + 'categories/' + id, {
+  const handleDeleteSlider = async (id) => {
+    const request = await fetch(ApiConfig.baseURL + 'slides/' + id, {
       method: 'DELETE',
     });
     const response = await request.json();
     console.log(response);
     if (request.status === 200) {
-      ToastSuccess('Danh mục đã được xoá');
-      setCategoryList(response.products);
+      ToastSuccess('Slide đã được xoá');
+      setSlideList(response.products);
     }
   };
 
   const renderAddCategoryButton = () => {
     return (
       <Link
-        href={'/category-management/add'}
+        href={'/slide-management/add'}
         type="button"
         className="text-white bg-blue-700 hover:bg-blue-800
      font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 
@@ -60,7 +60,7 @@ const CategoryManagement = (props) => {
      mt-5
      "
       >
-        Thêm danh mục
+        Thêm slide
       </Link>
     );
   };
@@ -69,19 +69,19 @@ const CategoryManagement = (props) => {
     return (
       <div>
         <Link
-          href={'/category-management/' + slug + '?edit=false'}
+          href={'/slide-management/' + id + '?edit=false'}
           className="text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-green-300 font-medium rounded-full text-sm px-2 py-2 text-center me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
         >
           Xem
         </Link>
         <Link
-          href={'category-management/' + slug + '?edit=true'}
+          href={'slide-management/' + id + '?edit=true'}
           className="text-white bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-yellow-300 font-medium rounded-full text-sm px-2 py-2 text-center me-2 mb-2 dark:focus:ring-yellow-900"
         >
           Sửa
         </Link>
         <button
-          onClick={() => handleDeleteCategory(id)}
+          onClick={() => handleDeleteSlider(id)}
           className="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-red-300 font-medium rounded-full text-sm px-2 py-2 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
         >
           Xoá
@@ -90,25 +90,25 @@ const CategoryManagement = (props) => {
     );
   };
 
-  return categoryList.length ? (
+  return slideList.length ? (
     <>
-      <HeaderTitle title={'Quản lý danh mục'} />
+      <HeaderTitle title={'Quản lý slide'} />
 
       {renderAddCategoryButton()}
 
       <ul role="list" className="divide-y divide-gray-100">
-        {categoryList.length &&
-          categoryList.map((category) => (
-            <li key={category._id} className="flex justify-between gap-x-6 py-5">
+        {slideList.length &&
+          slideList.map((slide) => (
+            <li key={slide._id} className="flex justify-between gap-x-6 py-5">
               <div className="flex min-w-0 gap-x-4">
                 <img
                   className="h-12 w-12 flex-none rounded-full bg-gray-50"
-                  src={category.thumb}
-                  alt={category.name}
+                  src={slide.thumb}
+                  alt={slide.title}
                 />
                 <div className="min-w-0 flex-auto">
                   <p className="text-sm font-semibold leading-6 text-gray-900">
-                    {category.name} ({category.productsInCategory.length})
+                    {slide.title}
                   </p>
                 </div>
               </div>
@@ -199,4 +199,4 @@ const CategoryManagement = (props) => {
   );
 };
 
-export default CategoryManagement;
+export default SlideManagement;

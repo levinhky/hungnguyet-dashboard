@@ -8,10 +8,10 @@ import { storage } from '@/lib/firebase';
 import { useRouter } from 'next/navigation';
 import { ToastError, ToastSuccess } from '@/constants/sweetalert';
 import ApiConfig from '@/Config/ApiConfig';
-import { initialCategoryState } from '@/constants/initialState';
+import { initialSlideState } from '@/constants/initialState';
 
-function CategoryForm(props) {
-  const [category, setCategory] = useState(initialCategoryState);
+function SlideForm(props) {
+  const [slide, setSlide] = useState(initialSlideState);
   const [progress, setProgress] = useState(0);
   const [loading, setLoading] = useState(0);
 
@@ -21,44 +21,42 @@ function CategoryForm(props) {
   const router = useRouter();
 
   useEffect(() => {
-    const getCategory = async () => {
-      const categoryRequest = await fetch(ApiConfig.baseURL + 'categories/' + slug);
-      const category = await categoryRequest.json();
-      if (category._id) {
-        setCategory((prevState) => ({
+    const getSlider = async () => {
+      const sliderRequest = await fetch(ApiConfig.baseURL + 'slides/' + slug);
+      const slide = await sliderRequest.json();
+      if (slide._id) {
+        setSlide((prevState) => ({
           ...prevState,
-          id: category?._id,
-          name: category?.name,
-          thumb: category?.thumb,
-          level: category?.level,
-          display: category?.display,
-          subCategories: category?.subCategories,
-          productsInCategory: category?.productsInCategory,
-          slug: category?.slug,
-          createdAt: category?.createdAt,
-          updatedAt: category?.updatedAt,
+          id: slide?._id,
+          title: slide?.title,
+          thumb: slide?.thumb,
+          description: slide?.description,
+          buttonText: slide?.buttonText,
+          display: slide?.display,
+          createdAt: slide?.createdAt,
+          updatedAt: slide?.updatedAt,
         }));
       }
     };
 
-    slug !== 'add' && getCategory();
+    slug !== 'add' && getSlider();
   }, [slug]);
 
-  const handlePostCategory = async () => {
-    const url = slug === 'add' ? 'categories/add' : `categories/${category.id}`;
+  const handlePostSlide = async () => {
+    const url = slug === 'add' ? 'slides/add' : `slides/${slider.id}`;
     const postRequest = await fetch(`${ApiConfig.baseURL}${url}`, {
       method: slug === 'add' ? 'POST' : 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(category),
+      body: JSON.stringify(slide),
     });
 
     if (postRequest.status === 200) {
-      router.push('/category-management');
+      router.push('/slide-management');
       slug === 'add'
-        ? ToastSuccess('Danh mục đã được thêm')
-        : ToastSuccess('Danh mục đã được cập nhật');
+        ? ToastSuccess('Slide đã được thêm')
+        : ToastSuccess('Slide đã được cập nhật');
     } else if (postRequest.status === 500) {
       ToastError('Có lỗi xảy ra');
     }
@@ -66,7 +64,7 @@ function CategoryForm(props) {
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    setCategory((prevState) => ({
+    setSlide((prevState) => ({
       ...prevState,
       [name]: name == 'display' ? !prevState.display : value,
     }));
@@ -131,7 +129,7 @@ function CategoryForm(props) {
   };
 
   const handleDeleteImage = () => {
-    setCategory((prevState) => ({
+    setSlide((prevState) => ({
       ...prevState,
       thumb: '',
     }));
@@ -149,7 +147,7 @@ function CategoryForm(props) {
         </button>
         <button
           type="button"
-          onClick={handlePostCategory}
+          onClick={handlePostSlide}
           disabled={edit === 'false'}
           className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
         >
@@ -198,17 +196,61 @@ function CategoryForm(props) {
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
             <div className="sm:col-span-4">
               <label
-                htmlFor="name"
+                htmlFor="title"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
-                Tên danh mục:
+                Tiêu đề:
               </label>
               <div className="mt-2">
                 <input
                   type="text"
-                  name="name"
-                  id="name"
-                  value={category?.name}
+                  name="title"
+                  id="title"
+                  value={slide?.title}
+                  onChange={(e) => handleInputChange(e)}
+                  disabled={edit === 'false' ? true : false}
+                  className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset 
+                  ${edit === 'false' ? 'cursor-not-allowed' : ''}
+                  ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
+                />
+              </div>
+            </div>
+
+            <div className="sm:col-span-4">
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Mô tả:
+              </label>
+              <div className="mt-2">
+                <input
+                  type="text"
+                  name="title"
+                  id="title"
+                  value={slide?.title}
+                  onChange={(e) => handleInputChange(e)}
+                  disabled={edit === 'false' ? true : false}
+                  className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset 
+                  ${edit === 'false' ? 'cursor-not-allowed' : ''}
+                  ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
+                />
+              </div>
+            </div>
+
+            <div className="sm:col-span-4">
+              <label
+                htmlFor="buttonText"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Chữ trên nút:
+              </label>
+              <div className="mt-2">
+                <input
+                  type="text"
+                  name="buttonText"
+                  id="buttonText"
+                  value={slide?.buttonText}
                   onChange={(e) => handleInputChange(e)}
                   disabled={edit === 'false' ? true : false}
                   className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset 
@@ -227,11 +269,11 @@ function CategoryForm(props) {
                   name="display"
                   onChange={(e) => handleAttributeChange(e)}
                   disabled={edit === 'false' ? true : false}
-                  checked={category.display}
+                  checked={slide.display}
                 />
                 <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none  dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600" />
                 <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                  Trạng thái: {category.display ? 'Hiện' : 'Ẩn'}
+                  Trạng thái: {slide.display ? 'Hiện' : 'Ẩn'}
                 </span>
               </label>
             </div>
@@ -250,8 +292,8 @@ function CategoryForm(props) {
                   <div className="relative">
                     <img
                       className="h-auto max-w-full rounded-lg w-full"
-                      src={category.thumb}
-                      alt={category.name}
+                      src={slide.thumb}
+                      alt={slide.name}
                     />
                     <button
                       type="button"
@@ -301,7 +343,7 @@ function CategoryForm(props) {
                   type="text"
                   name="createdAt"
                   id="createdAt"
-                  value={category?.createdAt}
+                  value={slide?.createdAt}
                   onChange={(e) => handleInputChange(e)}
                   disabled={edit === 'false' ? true : false}
                   className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset 
@@ -323,7 +365,7 @@ function CategoryForm(props) {
                   type="text"
                   name="updatedAt"
                   id="updatedAt"
-                  value={category?.updatedAt}
+                  value={slide?.updatedAt}
                   onChange={(e) => handleInputChange(e)}
                   disabled={edit === 'false' ? true : false}
                   className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset 
@@ -341,4 +383,4 @@ function CategoryForm(props) {
   );
 }
 
-export default CategoryForm;
+export default SlideForm;
