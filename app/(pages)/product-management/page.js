@@ -90,35 +90,39 @@ const ProductManagement = (props) => {
     );
   };
 
-  return productList.length ? (
+  return (
     <>
       <HeaderTitle title={'Quản lý sản phẩm'} />
 
       {renderAddProductButton()}
 
-      <ul role="list" className="divide-y divide-gray-100">
-        {productList.length &&
-          productList.map((product) => (
-            <li key={product._id} className="flex justify-between gap-x-6 py-5">
-              <div className="flex min-w-0 gap-x-4">
-                <img
-                  className="h-12 w-12 flex-none rounded-full bg-gray-50"
-                  src={product.thumbs[0]}
-                  alt={product.name}
-                />
-                <div className="min-w-0 flex-auto">
-                  <p className="text-sm font-semibold leading-6 text-gray-900">
-                    {product.name}
-                  </p>
-                  <p className="mt-1 truncate text-xs leading-5 text-gray-500">
-                    SKU: {product.sku}
-                  </p>
+      {productList.length ? (
+        <ul role="list" className="divide-y divide-gray-100">
+          {productList.length &&
+            productList.map((product) => (
+              <li key={product._id} className="flex justify-between gap-x-6 py-5">
+                <div className="flex min-w-0 gap-x-4">
+                  <img
+                    className="h-12 w-12 flex-none rounded-full bg-gray-50"
+                    src={product.thumbs[0]}
+                    alt={product.name}
+                  />
+                  <div className="min-w-0 flex-auto">
+                    <p className="text-sm font-semibold leading-6 text-gray-900">
+                      {product.name}
+                    </p>
+                    <p className="mt-1 truncate text-xs leading-5 text-gray-500">
+                      SKU: {product.sku}
+                    </p>
+                  </div>
                 </div>
-              </div>
-              {renderActionButtons(product.slug, product._id)}
-            </li>
-          ))}
-      </ul>
+                {renderActionButtons(product.slug, product._id)}
+              </li>
+            ))}
+        </ul>
+      ) : (
+        'Không tìm thấy sản phẩm nào!'
+      )}
 
       <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
         <div className="flex flex-1 justify-between sm:hidden">
@@ -197,8 +201,6 @@ const ProductManagement = (props) => {
         </div>
       </div>
     </>
-  ) : (
-    <Loading />
   );
 };
 
