@@ -21,7 +21,7 @@ function SlideForm(props) {
   const router = useRouter();
 
   useEffect(() => {
-    const getSlider = async () => {
+    const getSlide = async () => {
       const sliderRequest = await fetch(ApiConfig.baseURL + 'slides/' + slug);
       const slide = await sliderRequest.json();
       if (slide._id) {
@@ -39,11 +39,11 @@ function SlideForm(props) {
       }
     };
 
-    slug !== 'add' && getSlider();
+    slug !== 'add' && getSlide();
   }, [slug]);
 
   const handlePostSlide = async () => {
-    const url = slug === 'add' ? 'slides/add' : `slides/${slider.id}`;
+    const url = slug === 'add' ? 'slides/add' : `slides/${slide.id}`;
     const postRequest = await fetch(`${ApiConfig.baseURL}${url}`, {
       method: slug === 'add' ? 'POST' : 'PUT',
       headers: {
@@ -118,7 +118,7 @@ function SlideForm(props) {
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             setLoading(false);
-            setProduct((prevState) => ({
+            setSlide((prevState) => ({
               ...prevState,
               thumb: downloadURL,
             }));
@@ -151,7 +151,7 @@ function SlideForm(props) {
           disabled={edit === 'false'}
           className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
         >
-          {slug === 'add' ? 'Thêm' : 'Sửa'}
+          {slug === 'add' || edit === 'false' ? 'Thêm' : 'Sửa'}
         </button>
       </div>
     );
@@ -218,7 +218,7 @@ function SlideForm(props) {
 
             <div className="sm:col-span-4">
               <label
-                htmlFor="name"
+                htmlFor="description"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
                 Mô tả:
@@ -226,9 +226,9 @@ function SlideForm(props) {
               <div className="mt-2">
                 <input
                   type="text"
-                  name="title"
-                  id="title"
-                  value={slide?.title}
+                  name="description"
+                  id="description"
+                  value={slide?.description}
                   onChange={(e) => handleInputChange(e)}
                   disabled={edit === 'false' ? true : false}
                   className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset 
@@ -267,7 +267,7 @@ function SlideForm(props) {
                   defaultValue
                   className="sr-only peer"
                   name="display"
-                  onChange={(e) => handleAttributeChange(e)}
+                  onChange={(e) => handleInputChange(e)}
                   disabled={edit === 'false' ? true : false}
                   checked={slide.display}
                 />
@@ -285,39 +285,41 @@ function SlideForm(props) {
               >
                 Hình ảnh:
               </label>
-              {edit == 'true' || (slug === 'add' && renderUploadFile())}
+              {edit === 'true' && renderUploadFile()}
 
               {!loading ? (
                 <div className="grid grid-cols-3 md:grid-cols-4 gap-4 mt-5">
-                  <div className="relative">
-                    <img
-                      className="h-auto max-w-full rounded-lg w-full"
-                      src={slide.thumb}
-                      alt={slide.name}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => handleDeleteImage()}
-                      className="flex justify-center items-center select-none bg-white  border-2 text-white text-xl font-bold absolute -top-2 -right-3
+                  {slide.thumb !== '' && (
+                    <div className="relative">
+                      <img
+                        className="h-auto max-w-full rounded-lg w-full"
+                        src={slide.thumb}
+                        alt={slide.name}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteImage()}
+                        className="flex justify-center items-center select-none bg-white  border-2 text-white text-xl font-bold absolute -top-2 -right-3
            p-1 rounded-full shadow h-6 w-6 focus:outline-none focus:shadow-outline"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width={40}
-                        height={40}
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="black"
-                        strokeWidth={2}
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="feather feather-x"
                       >
-                        <line x1={18} y1={6} x2={6} y2={18} />
-                        <line x1={6} y1={6} x2={18} y2={18} />
-                      </svg>
-                    </button>
-                  </div>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width={40}
+                          height={40}
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="black"
+                          strokeWidth={2}
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="feather feather-x"
+                        >
+                          <line x1={18} y1={6} x2={6} y2={18} />
+                          <line x1={6} y1={6} x2={18} y2={18} />
+                        </svg>
+                      </button>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div className="w-full bg-gray-200 rounded-full dark:bg-gray-700">
@@ -331,54 +333,58 @@ function SlideForm(props) {
               )}
             </div>
 
-            <div className="sm:col-span-4">
-              <label
-                htmlFor="createdAt"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Ngày tạo:
-              </label>
-              <div className="mt-2">
-                <input
-                  type="text"
-                  name="createdAt"
-                  id="createdAt"
-                  value={slide?.createdAt}
-                  onChange={(e) => handleInputChange(e)}
-                  disabled={edit === 'false' ? true : false}
-                  className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset 
+            {slug !== 'add' && (
+              <div className="sm:col-span-4">
+                <label
+                  htmlFor="createdAt"
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
+                  Ngày tạo:
+                </label>
+                <div className="mt-2">
+                  <input
+                    type="text"
+                    name="createdAt"
+                    id="createdAt"
+                    value={slide?.createdAt}
+                    onChange={(e) => handleInputChange(e)}
+                    disabled={edit === 'false' ? true : false}
+                    className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset 
                   ${edit === 'false' ? 'cursor-not-allowed' : ''}
                   ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
-                />
+                  />
+                </div>
               </div>
-            </div>
+            )}
 
-            <div className="sm:col-span-4">
-              <label
-                htmlFor="updatedAt"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Ngày cập nhật:
-              </label>
-              <div className="mt-2">
-                <input
-                  type="text"
-                  name="updatedAt"
-                  id="updatedAt"
-                  value={slide?.updatedAt}
-                  onChange={(e) => handleInputChange(e)}
-                  disabled={edit === 'false' ? true : false}
-                  className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset 
+            {slug !== 'add' && (
+              <div className="sm:col-span-4">
+                <label
+                  htmlFor="updatedAt"
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
+                  Ngày cập nhật:
+                </label>
+                <div className="mt-2">
+                  <input
+                    type="text"
+                    name="updatedAt"
+                    id="updatedAt"
+                    value={slide?.updatedAt}
+                    onChange={(e) => handleInputChange(e)}
+                    disabled={edit === 'false' ? true : false}
+                    className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset 
                   ${edit === 'false' ? 'cursor-not-allowed' : ''}
                   ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
-                />
+                  />
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>
 
-      {renderBottomButton()}
+      {edit === 'true' && renderBottomButton()}
     </form>
   );
 }

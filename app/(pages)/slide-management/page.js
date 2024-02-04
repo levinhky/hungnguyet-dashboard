@@ -23,7 +23,7 @@ const SlideManagement = (props) => {
       );
       const data = await res.json();
 
-      data.slides && setSlideList(data.slides);
+      data.slides.length > 0 && setSlideList(data.slides);
       data.totalPages && setTotalPages(data.totalPages);
       data.totalCount && setTotalCount(data.totalCount);
     };
@@ -49,10 +49,10 @@ const SlideManagement = (props) => {
     }
   };
 
-  const renderAddCategoryButton = () => {
+  const renderAddSlideButton = () => {
     return (
       <Link
-        href={'/slide-management/add'}
+        href={'/slide-management/add?edit=true'}
         type="button"
         className="text-white bg-blue-700 hover:bg-blue-800
      font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 
@@ -94,10 +94,10 @@ const SlideManagement = (props) => {
     <>
       <HeaderTitle title={'Quản lý slide'} />
 
-      {renderAddCategoryButton()}
+      {renderAddSlideButton()}
 
       <ul role="list" className="divide-y divide-gray-100">
-        {slideList.length &&
+        {slideList.length > 0 &&
           slideList.map((slide) => (
             <li key={slide._id} className="flex justify-between gap-x-6 py-5">
               <div className="flex min-w-0 gap-x-4">
@@ -112,7 +112,7 @@ const SlideManagement = (props) => {
                   </p>
                 </div>
               </div>
-              {renderActionButtons(category.slug, category._id)}
+              {renderActionButtons(slide.slug, slide._id)}
             </li>
           ))}
       </ul>

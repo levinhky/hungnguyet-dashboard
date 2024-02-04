@@ -438,7 +438,7 @@ function ProductForm(props) {
               >
                 Hình ảnh:
               </label>
-              {edit == 'true' || (slug === 'add' && renderUploadFile())}
+              {edit === 'true' && renderUploadFile()}
 
               {!loading ? (
                 <div className="grid grid-cols-3 md:grid-cols-4 gap-4 mt-5">
@@ -579,7 +579,7 @@ function ProductForm(props) {
         </div>
       </div>
 
-      {renderBottomButton()}
+      {edit === 'true' && renderBottomButton()}
     </form>
   );
 }

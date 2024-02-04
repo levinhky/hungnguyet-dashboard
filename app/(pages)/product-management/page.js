@@ -22,7 +22,7 @@ const ProductManagement = (props) => {
       );
       const data = await productResponse.json();
 
-      data.products && setProductList(data.products);
+      data.products.length > 0 && setProductList(data.products);
       data.totalPages && setTotalPages(data.totalPages);
       data.totalCount && setTotalCount(data.totalCount);
     };
@@ -51,7 +51,7 @@ const ProductManagement = (props) => {
   const renderAddProductButton = () => {
     return (
       <Link
-        href={'/product-management/add'}
+        href={'/product-management/add?edit=true'}
         type="button"
         className="text-white bg-blue-700 hover:bg-blue-800
      font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 

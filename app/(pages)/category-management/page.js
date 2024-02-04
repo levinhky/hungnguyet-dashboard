@@ -23,7 +23,7 @@ const CategoryManagement = (props) => {
       );
       const data = await res.json();
 
-      data.categories && setCategoryList(data.categories);
+      data.categories.length > 0 && setCategoryList(data.categories);
       data.totalPages && setTotalPages(data.totalPages);
       data.totalCount && setTotalCount(data.totalCount);
     };
@@ -52,7 +52,7 @@ const CategoryManagement = (props) => {
   const renderAddCategoryButton = () => {
     return (
       <Link
-        href={'/category-management/add'}
+        href={'/category-management/add?edit=true'}
         type="button"
         className="text-white bg-blue-700 hover:bg-blue-800
      font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 

@@ -243,39 +243,41 @@ function CategoryForm(props) {
               >
                 Hình ảnh:
               </label>
-              {edit == 'true' || (slug === 'add' && renderUploadFile())}
+              {edit === 'true' && renderUploadFile()}
 
               {!loading ? (
                 <div className="grid grid-cols-3 md:grid-cols-4 gap-4 mt-5">
-                  <div className="relative">
-                    <img
-                      className="h-auto max-w-full rounded-lg w-full"
-                      src={category.thumb}
-                      alt={category.name}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => handleDeleteImage()}
-                      className="flex justify-center items-center select-none bg-white  border-2 text-white text-xl font-bold absolute -top-2 -right-3
+                  {category.thumb !== '' && (
+                    <div className="relative">
+                      <img
+                        className="h-auto max-w-full rounded-lg w-full"
+                        src={category.thumb}
+                        alt={category.name}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteImage()}
+                        className="flex justify-center items-center select-none bg-white  border-2 text-white text-xl font-bold absolute -top-2 -right-3
            p-1 rounded-full shadow h-6 w-6 focus:outline-none focus:shadow-outline"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width={40}
-                        height={40}
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="black"
-                        strokeWidth={2}
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="feather feather-x"
                       >
-                        <line x1={18} y1={6} x2={6} y2={18} />
-                        <line x1={6} y1={6} x2={18} y2={18} />
-                      </svg>
-                    </button>
-                  </div>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width={40}
+                          height={40}
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="black"
+                          strokeWidth={2}
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="feather feather-x"
+                        >
+                          <line x1={18} y1={6} x2={6} y2={18} />
+                          <line x1={6} y1={6} x2={18} y2={18} />
+                        </svg>
+                      </button>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div className="w-full bg-gray-200 rounded-full dark:bg-gray-700">
@@ -336,7 +338,7 @@ function CategoryForm(props) {
         </div>
       </div>
 
-      {renderBottomButton()}
+      {edit === 'true' && renderBottomButton()}
     </form>
   );
 }
