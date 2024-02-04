@@ -18,7 +18,7 @@ const ProductManagement = (props) => {
   useEffect(() => {
     const getProductList = async () => {
       const productResponse = await fetch(
-        ApiConfig.baseURL + 'products/all?page=' + currentPage + '&limit=3',
+        ApiConfig.baseURL + 'products/all?page=' + currentPage + '&limit=8',
       );
       const data = await productResponse.json();
 

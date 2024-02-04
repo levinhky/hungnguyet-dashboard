@@ -19,7 +19,7 @@ const CategoryManagement = (props) => {
   useEffect(() => {
     const getCategoryList = async () => {
       const res = await fetch(
-        ApiConfig.baseURL + 'categories/all?page=' + currentPage + '&limit=5',
+        ApiConfig.baseURL + 'categories/all?page=' + currentPage + '&limit=8',
       );
       const data = await res.json();
 
