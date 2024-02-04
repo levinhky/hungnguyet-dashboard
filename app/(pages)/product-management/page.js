@@ -45,6 +45,7 @@ const ProductManagement = (props) => {
     if (request.status === 200) {
       ToastSuccess('Sản phẩm đã được xoá');
       setProductList(response.products);
+      setTotalCount(response.totalCount);
     }
   };
 

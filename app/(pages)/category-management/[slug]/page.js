@@ -45,13 +45,19 @@ function CategoryForm(props) {
   }, [slug]);
 
   const handlePostCategory = async () => {
+    const data = {
+      name: category.name,
+      thumb: category.thumb,
+      level: category.level,
+      display: category.display,
+    };
     const url = slug === 'add' ? 'categories/add' : `categories/${category.id}`;
     const postRequest = await fetch(`${ApiConfig.baseURL}${url}`, {
       method: slug === 'add' ? 'POST' : 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(category),
+      body: JSON.stringify(data),
     });
 
     if (postRequest.status === 200) {
@@ -120,7 +126,7 @@ function CategoryForm(props) {
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             setLoading(false);
-            setProduct((prevState) => ({
+            setCategory((prevState) => ({
               ...prevState,
               thumb: downloadURL,
             }));
@@ -225,7 +231,7 @@ function CategoryForm(props) {
                   defaultValue
                   className="sr-only peer"
                   name="display"
-                  onChange={(e) => handleAttributeChange(e)}
+                  onChange={(e) => handleInputChange(e)}
                   disabled={edit === 'false' ? true : false}
                   checked={category.display}
                 />
@@ -291,49 +297,53 @@ function CategoryForm(props) {
               )}
             </div>
 
-            <div className="sm:col-span-4">
-              <label
-                htmlFor="createdAt"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Ngày tạo:
-              </label>
-              <div className="mt-2">
-                <input
-                  type="text"
-                  name="createdAt"
-                  id="createdAt"
-                  value={category?.createdAt}
-                  onChange={(e) => handleInputChange(e)}
-                  disabled={edit === 'false' ? true : false}
-                  className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset 
+            {slug !== 'add' && (
+              <div className="sm:col-span-4">
+                <label
+                  htmlFor="createdAt"
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
+                  Ngày tạo:
+                </label>
+                <div className="mt-2">
+                  <input
+                    type="text"
+                    name="createdAt"
+                    id="createdAt"
+                    value={category?.createdAt}
+                    onChange={(e) => handleInputChange(e)}
+                    disabled={edit === 'false' ? true : false}
+                    className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset 
                   ${edit === 'false' ? 'cursor-not-allowed' : ''}
                   ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
-                />
+                  />
+                </div>
               </div>
-            </div>
+            )}
 
-            <div className="sm:col-span-4">
-              <label
-                htmlFor="updatedAt"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Ngày cập nhật:
-              </label>
-              <div className="mt-2">
-                <input
-                  type="text"
-                  name="updatedAt"
-                  id="updatedAt"
-                  value={category?.updatedAt}
-                  onChange={(e) => handleInputChange(e)}
-                  disabled={edit === 'false' ? true : false}
-                  className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset 
+            {slug !== 'add' && (
+              <div className="sm:col-span-4">
+                <label
+                  htmlFor="updatedAt"
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
+                  Ngày cập nhật:
+                </label>
+                <div className="mt-2">
+                  <input
+                    type="text"
+                    name="updatedAt"
+                    id="updatedAt"
+                    value={category?.updatedAt}
+                    onChange={(e) => handleInputChange(e)}
+                    disabled={edit === 'false' ? true : false}
+                    className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset 
                   ${edit === 'false' ? 'cursor-not-allowed' : ''}
                   ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
-                />
+                  />
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>

@@ -70,31 +70,38 @@ function ProductForm(props) {
 
     slug !== 'add' && getProduct();
   }, [slug]);
-
+  console.log(product.category);
   useEffect(() => {
     const getListCategory = async () => {
       const categoriesRequest = await fetch(ApiConfig.baseURL + 'categories/all');
-      const categories = await categoriesRequest.json();
-      const categoryList = categories.map((category) => ({
+      const res = await categoriesRequest.json();
+      const categoryList = res.categories.map((category) => ({
         id: category._id,
         name: category.name,
         display: category.display,
       }));
 
-      categories.length > 0 && setCategoryList(categoryList);
+      res.categories.length > 0 && setCategoryList(categoryList);
     };
 
     getListCategory();
   }, [slug]);
 
   const handlePostProduct = async () => {
+    const data = {
+      name: product.name,
+      category: product.category._id,
+      status: product.status,
+      thumbs: product.thumbs,
+      attributes: product.attributes,
+    };
     const url = slug === 'add' ? 'products/add' : `products/${product.id}`;
     const postRequest = await fetch(`${ApiConfig.baseURL}${url}`, {
       method: slug === 'add' ? 'POST' : 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(product),
+      body: JSON.stringify(data),
     });
 
     if (postRequest.status === 200) {
@@ -130,7 +137,7 @@ function ProductForm(props) {
   const handleCategoryChange = (category) => {
     setProduct((prevProduct) => ({
       ...prevProduct,
-      category: category.value,
+      category: { ...prevProduct.category, _id: category.value },
     }));
 
     setCategorySelect({

@@ -45,7 +45,8 @@ const CategoryManagement = (props) => {
     console.log(response);
     if (request.status === 200) {
       ToastSuccess('Danh mục đã được xoá');
-      setCategoryList(response.products);
+      setCategoryList(response.categories);
+      setTotalCount(response.totalCount);
     }
   };
 
@@ -98,25 +99,23 @@ const CategoryManagement = (props) => {
 
       <ul role="list" className="divide-y divide-gray-100">
         {categoryList.length &&
-          categoryList.map((category) => {
-            category.id !== '' && (
-              <li key={category._id} className="flex justify-between gap-x-6 py-5">
-                <div className="flex min-w-0 gap-x-4">
-                  <img
-                    className="h-12 w-12 flex-none rounded-full bg-gray-50"
-                    src={category.thumb}
-                    alt={category.name}
-                  />
-                  <div className="min-w-0 flex-auto">
-                    <p className="text-sm font-semibold leading-6 text-gray-900">
-                      {category.name} ({category.productsInCategory.length})
-                    </p>
-                  </div>
+          categoryList.map((category) => (
+            <li key={category._id} className="flex justify-between gap-x-6 py-5">
+              <div className="flex min-w-0 gap-x-4">
+                <img
+                  className="h-12 w-12 flex-none rounded-full bg-gray-50"
+                  src={category.thumb}
+                  alt={category.name}
+                />
+                <div className="min-w-0 flex-auto">
+                  <p className="text-sm font-semibold leading-6 text-gray-900">
+                    {category.name} ({category.productsInCategory.length})
+                  </p>
                 </div>
-                {renderActionButtons(category.slug, category._id)}
-              </li>
-            );
-          })}
+              </div>
+              {renderActionButtons(category.slug, category._id)}
+            </li>
+          ))}
       </ul>
 
       <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">

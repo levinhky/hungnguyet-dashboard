@@ -40,7 +40,7 @@ const initialProductState = {
     uses: '',
     display: false,
   },
-  category: '',
+  category: initialCategoryState,
   createdAt: '',
   updatedAt: '',
 };

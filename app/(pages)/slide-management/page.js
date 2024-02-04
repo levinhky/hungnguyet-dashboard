@@ -45,7 +45,8 @@ const SlideManagement = (props) => {
     console.log(response);
     if (request.status === 200) {
       ToastSuccess('Slide đã được xoá');
-      setSlideList(response.products);
+      setSlideList(response.sliders);
+      setTotalCount(response.totalCount);
     }
   };
 
