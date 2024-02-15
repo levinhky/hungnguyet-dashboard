@@ -90,7 +90,7 @@ const SlideManagement = (props) => {
       </div>
     );
   };
-
+  console.log(slideList);
   return slideList.length > 0 ? (
     <>
       <HeaderTitle title={'Quản lý slide'} />
@@ -100,22 +100,24 @@ const SlideManagement = (props) => {
       <ul role="list" className="divide-y divide-gray-100">
         {slideList.length > 0 &&
           slideList.map((slide) => {
-            slide.id !== '' && (
-              <li key={slide.id} className="flex justify-between gap-x-6 py-5">
-                <div className="flex min-w-0 gap-x-4">
-                  <img
-                    className="h-12 w-12 flex-none rounded-full bg-gray-50"
-                    src={slide.thumb}
-                    alt={slide.title}
-                  />
-                  <div className="min-w-0 flex-auto">
-                    <p className="text-sm font-semibold leading-6 text-gray-900">
-                      {slide.title}
-                    </p>
+            return (
+              slide._id !== '' && (
+                <li key={slide._id} className="flex justify-between gap-x-6 py-5">
+                  <div className="flex min-w-0 gap-x-4">
+                    <img
+                      className="h-12 w-12 flex-none rounded-full bg-gray-50"
+                      src={slide.thumb}
+                      alt={slide.title}
+                    />
+                    <div className="min-w-0 flex-auto">
+                      <p className="text-sm font-semibold leading-6 text-gray-900">
+                        {slide.title}
+                      </p>
+                    </div>
                   </div>
-                </div>
-                {renderActionButtons(slide.slug, slide._id)}
-              </li>
+                  {renderActionButtons(slide.slug, slide._id)}
+                </li>
+              )
             );
           })}
       </ul>
